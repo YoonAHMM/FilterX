@@ -19,25 +19,25 @@ func NewTrieNode() *TrieNode {
 	}
 }
 
-func (this *TrieNode) Add(c int) *TrieNode {
-	if val, s := this.Values[c]; s {
+func (t *TrieNode) Add(c int) *TrieNode {
+	if val, s := t.Values[c]; s {
 		return val
 	}
 	node := NewTrieNode()
-	node.Parent = this
+	node.Parent = t
 	node.C = c
-	this.Values[c] = node
+	t.Values[c] = node
 	return node
 }
 
-func (this *TrieNode) SetResults(text int) {
-	if this.End == false {
-		this.End = true
+func (t *TrieNode) SetResults(text int) {
+	if t.End == false {
+		t.End = true
 	}
-	for i := 0; i < len(this.Results); i++ {
-		if this.Results[i] == text {
+	for i := 0; i < len(t.Results); i++ {
+		if t.Results[i] == text {
 			return
 		}
 	}
-	this.Results = append(this.Results, text)
+	t.Results = append(t.Results, text)
 }
