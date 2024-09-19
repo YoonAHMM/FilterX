@@ -200,7 +200,7 @@ func (b *BaseSearchEx)CreateDict(keywords []string) int {
 
 func(b *BaseSearchEx)tryLinks(node *internal.TrieNodeEx) {
 	node.Merge(node.Failure)
-	for _,item:=range node.Values{
+	for _,item:=range node.Merge_values{
 		b.tryLinks(item)
 	}
 }
@@ -230,4 +230,5 @@ func(b *BaseSearchEx)build(root *internal.TrieNodeEx,length int) {
 		}
 	}
 	b.Guides=guides
+	return
 }

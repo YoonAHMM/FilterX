@@ -5,30 +5,30 @@ import(
 type TrieNodeEx struct {
 	Parent *TrieNodeEx    //父节点
 	Failure *TrieNodeEx   //失败跳跃节点
-	Char int32            //字符
+	Char int            //字符
 	End bool              //是否结束
 	Results []int         //结果
-	Values map[int32]*TrieNodeEx   //子节点  
-	Merge_values map[int32]*TrieNodeEx  //合并子节点
-	Min int32 //子节点最小范围
-	Max int32  //子节点最大范围
+	Values map[int]*TrieNodeEx   //子节点  
+	Merge_values map[int]*TrieNodeEx  //合并子节点
+	Min int //子节点最小范围
+	Max int //子节点最大范围
 	Next int   //子节点起始位置
 	Count int  //子节点数量
 }
 
 func NewTrieNodeEx() *TrieNodeEx  {
 	return &TrieNodeEx{
-		Values: make(map[int32]*TrieNodeEx),
-		Merge_values: make(map[int32]*TrieNodeEx),
+		Values: make(map[int]*TrieNodeEx),
+		Merge_values: make(map[int]*TrieNodeEx),
 		Results: make([]int, 0),
-		Min:  math.MaxInt32,
-		Max:  math.MinInt32,
+		Min:  math.MaxInt,
+		Max: 0,
 		Next:0,
 		Count:0,
 	}
 }
 
-func (t *TrieNodeEx) GetValue(c int32) (*TrieNodeEx,bool) {
+func (t *TrieNodeEx) GetValue(c int) (*TrieNodeEx,bool) {
 	if t.Min <= c && t.Max >= c {
 		if val, ok := t.Values[c]; ok {
 			return val,true
@@ -37,7 +37,7 @@ func (t *TrieNodeEx) GetValue(c int32) (*TrieNodeEx,bool) {
 	return nil,false
 }
 
-func (t *TrieNodeEx) Add(c int32)*TrieNodeEx {
+func (t *TrieNodeEx) Add(c int)*TrieNodeEx {
 	if val,ok:=t.GetValue(c);ok{
 		return val
 	}
@@ -111,7 +111,7 @@ func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
 	}
 
 	// 子节点
-	keys := make([]int32,0,len(t.Merge_values)+len(t.Values))
+	keys := make([]int,0,len(t.Merge_values)+len(t.Values))
 	for k,_:=range t.Values {
 		keys=append(keys,k)
 	}
@@ -126,14 +126,14 @@ func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
 
 	
 	s := start
-	if start < int (t.Min){
-		s= int (t.Min)
+	if start < t.Min{
+		s= t.Min
 	}
 
-	for i:=s;i <= int(t.Max);i++{
+	for i:=s;i <= len(has);i++{
 		if has[i] == nil{
 			// 计算位置
-			next:=i-int(t.Min)
+			next:=i - t.Min
 			if seats[next] {
 				continue
 			}
@@ -141,8 +141,8 @@ func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
 			// 检查位置是否可用
 			ok:=true
 			for _,item:=range keys{
-				if has[next + int(item)] != nil {
-					ok =false
+				if has[next + item] != nil {
+					ok = false
 					break
 				}
 			}
@@ -155,8 +155,9 @@ func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
 			}
 		}
 	}
+	
 	start +=len(keys)/2
-	for _,v:=range t.Merge_values{
+	for _,v:=range t.Values{
 		start = v.Rank2(start,seats,has)
 	}
 	return start
@@ -164,11 +165,11 @@ func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
 
 func (t *TrieNodeEx)SetSeats(next int,has []*TrieNodeEx){
 	for key,value := range t.Merge_values{
-		position := next + int (key)
+		position := next + key
 		has[position] = value
 	}
 	for key,value := range t.Values{
-		position := next + int (key) 
+		position := next + key
 		has[position] = value
 	}
 }

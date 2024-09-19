@@ -21,7 +21,7 @@ func(s *SearchEx)SetKeyWords(keywords []string) {
 		nd:=root
 		p:= []rune(keyword)
 		for _,c := range p{
-			nd = nd.Add(int32(s.Dict[c]))
+			nd = nd.Add(s.Dict[c])
 		}
 		nd.SetResults(i)
 	}
@@ -79,7 +79,7 @@ func(s *SearchEx)SetKeyWords(keywords []string) {
 	s.build(root, length)
 }
 
-func(s *SearchEx)FindFirst(text string) string{
+func(s *SearchEx)GetStringFindFirst(text string) string{
 	p:=0
 
 	for _,c:=range text{
@@ -105,4 +105,33 @@ func(s *SearchEx)FindFirst(text string) string{
 		}
 	}
 	return ""
+}
+
+func (s *SearchEx)GetStringFindAll(text string) []string  {
+	root:= make([]string, 0)
+	p:=0
+	for _,c := range text {
+		t:=s.Dict[c]
+		if	t==0{
+			p = 0;
+			continue;
+		}
+		next := s.Next[p] + t;
+		find := s.Key[next] == t;
+		if  find == false && p != 0  {
+			p = 0;
+			next = s.Next[0] + t;
+			find = s.Key[next] == t;
+		}
+		if  find  {
+			index := s.Check[next];
+			if index > 0 {
+				for _,item:=range s.Guides[index]{
+					root=append(root,s.KeyWords[item])
+				}
+			}
+			p = next;
+		}
+	}
+	return root;
 }
