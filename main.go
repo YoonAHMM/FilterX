@@ -8,7 +8,7 @@ import (
 
 func init_SearchTest() *logic.Search {
 	search := logic.NewSearch()
-	list := []string{"15768"}
+	list := []string{"f\u00a0a\u00a0l\u00a0u\u00a0n"}
 	search.SetKeywords(list)
 	return search
 }
@@ -16,6 +16,6 @@ func init_SearchTest() *logic.Search {
 func main() {
 	serrch:=init_SearchTest()
 
-	s:=serrch.GetStringFindFirst("15768hmm love ljx")
-	fmt.Println(s)
+	serrch.GetStringFindFirst("f\u00a0a\u00a0l\u00a0u\u00a0n")
+	fmt.Println(len("f\u00a0a\u00a0l\u00a0u\u00a0n"))
 }

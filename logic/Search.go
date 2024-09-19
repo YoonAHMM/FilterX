@@ -31,31 +31,25 @@ func(s *Search)SetKeywords(keywords []string){
 	nodeLevel:=make(map[int]*internal.TrieNodes)
 
 	for index,str:=range keywords{
-		length:=len(str)
+		node := root
+		//字符位置
+		r:=[]rune(str)
+		for i,ch:=range r{
+			node = node.Add(ch)
 
-		if length > 0{
-			node := root
-			
-			//字符位置
-			i:=0
-			for _,ch:=range str{
-				node = node.Add(ch)
-
-				//新节点
-				if node.Level == 0{
-					node.Level = i + 1
-					if trieNodes, ok := nodeLevel[node.Level]; ok {
-						trieNodes.Items = append(trieNodes.Items, node)
-					} else {
-						trieNodes = internal.NewTrieNodes()
-						nodeLevel[node.Level] = trieNodes
-						trieNodes.Items = append(trieNodes.Items, node)
-					}
+			//新节点
+			if node.Level == 0{
+				node.Level = i + 1
+				if trieNodes, ok := nodeLevel[node.Level]; ok {
+					trieNodes.Items = append(trieNodes.Items, node)
+				} else {
+					trieNodes = internal.NewTrieNodes()
+					nodeLevel[node.Level] = trieNodes
+					trieNodes.Items = append(trieNodes.Items, node)
 				}
-				i++	
 			}
-			node.SetResults(index)
 		}
+		node.SetResults(index)
 	}
 
 //ac自动机 构建	
@@ -182,7 +176,7 @@ func (s *Search) GetStringFindFirst(text string) string{
 	var lnode *internal.TrieNode2   //前一个trieNode2值
 
 	
-	//遍历所有字符，如果当前节点的字符表里没有则到_first里找
+	//遍历所有字符，如果当前节点的字符表里没有则到first里找
 	for _, t := range text {
 		var node *internal.TrieNode2  //当前trieNode2值
 		
@@ -210,7 +204,7 @@ func (s *Search)  GetWordsFindAll(text string) []*format.WordsSearchResult {
 	var lnode *internal.TrieNode2   //前一个trieNode2值
 
 	i:=0
-	//遍历所有字符，如果当前节点的字符表里没有则到_first里找
+	//遍历所有字符，如果当前节点的字符表里没有则到first里找
 	for _, t := range text {
 		var node *internal.TrieNode2  //当前trieNode2值
 		
@@ -280,7 +274,7 @@ func (s *Search) ContainsAny(text string) bool {
 	var lnode *internal.TrieNode2   //前一个trieNode2值
 
 
-	//遍历所有字符，如果当前节点的字符表里没有则到_first里找
+	//遍历所有字符，如果当前节点的字符表里没有则到first里找
 	for _, t := range text {
 		var node *internal.TrieNode2  //当前trieNode2值
 		
@@ -310,7 +304,7 @@ func (s *Search) Replace(text string,replaceChar int32) string {
 	var lnode *internal.TrieNode2   //前一个trieNode2值
 
 	i:=0
-	//遍历所有字符，如果当前节点的字符表里没有则到_first里找
+	//遍历所有字符，如果当前节点的字符表里没有则到first里找
 	for _, t := range text {
 		var node *internal.TrieNode2  //当前trieNode2值
 		

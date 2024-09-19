@@ -91,3 +91,81 @@ func (t *TrieNodeEx)Merge(node *TrieNodeEx) {
 	}
 }
 
+func(t *TrieNodeEx)Rank(has []*TrieNodeEx)int{
+	seats:=make([]bool,len(has))//位置
+	start:=1
+
+	has[0]=t //索引
+	t.Rank2(start,seats,has)
+	maxCount:=len(has)-1
+	for has[maxCount]==nil{
+		maxCount--
+	}
+	return maxCount
+}
+
+func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
+	// 没有子节点
+	if t.Count==0 {
+		return start
+	}
+
+	// 子节点
+	keys := make([]int32,0,len(t.Merge_values)+len(t.Values))
+	for k,_:=range t.Values {
+		keys=append(keys,k)
+	}
+	for k,_:=range t.Merge_values {
+		keys=append(keys,k)
+	}	
+
+	// 查找下一个位置
+	for	has[start] != nil{
+		start++
+	}
+
+	
+	s := start
+	if start < int (t.Min){
+		s= int (t.Min)
+	}
+
+	for i:=s;i<=int(t.Max);i++{
+		if has[i]==nil{
+			next:=i-int(t.Min)
+			if seats[next] {
+				continue
+			}
+
+			ok:=true
+			for _,item:=range keys{
+				if has[next + int(item)] != nil {
+					ok =false
+					break
+				}
+			}
+			if ok {
+				t.SetSeats(next,seats,has)
+				break
+			}
+		}
+	}
+	start +=len(keys)/2
+	for _,v:=range t.Merge_values{
+		start = v.Rank2(start,seats,has)
+	}
+	return start
+}
+
+func (t *TrieNodeEx)SetSeats(next int,seats []bool,has []*TrieNodeEx){
+	t.Next = next
+	seats[next] = true
+	for key,value := range t.Merge_values{
+		position := next + int (key)
+		has[position] = value
+	}
+	for key,value := range t.Values{
+		position := next + int (key) 
+		has[position] = value
+	}
+}
