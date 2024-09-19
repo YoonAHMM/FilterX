@@ -14,7 +14,7 @@ type BaseSearchEx struct {
 	Key 		[]int     //当前位置字符	
 	Next  		[]int	  //查询子节点的指针位置
 	Check  		[]int	  //当前位置是否命中
-	Dict 		[]int	 //字典
+	Dict 		[]int	  //字典
 }
 
 //检测是否有保存的初始化二进制文件
@@ -206,5 +206,28 @@ func(b *BaseSearchEx)tryLinks(node *internal.TrieNodeEx) {
 }
 
 func(b *BaseSearchEx)build(root *internal.TrieNodeEx,length int) {
-	
+	has:= make([]*internal.TrieNodeEx,0x00FFFFFF)
+
+	length = root.Rank(has) + length + 1;
+	b.Key=make([]int,length)
+	b.Next=make([]int,length)
+	b.Check=make([]int,length)
+	var guides [][]int
+
+	// 根节点
+	guides=append(guides,[]int{0})
+
+	for i := 0; i < length; i++  {
+		item := has[i];
+		if item==nil{
+			continue
+		}
+		b.Key[i] = int (item.Char) ;
+		b.Next[i] = item.Next;
+		if  item.End==true  {
+			b.Check[i] = len(guides) 
+			guides=append(guides,item.Results)
+		}
+	}
+	b.Guides=guides
 }

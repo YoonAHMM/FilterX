@@ -6,7 +6,7 @@ type SearchEx struct {
 	BaseSearchEx
 }
 
-func NewWordsSearchEx() *SearchEx{
+func NewSearchEx() *SearchEx{
 	return &SearchEx{
 	}
 }

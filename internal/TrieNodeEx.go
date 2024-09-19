@@ -12,7 +12,7 @@ type TrieNodeEx struct {
 	Merge_values map[int32]*TrieNodeEx  //合并子节点
 	Min int32 //子节点最小范围
 	Max int32  //子节点最大范围
-	Next int  
+	Next int   //子节点起始位置
 	Count int  //子节点数量
 }
 
@@ -119,7 +119,7 @@ func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
 		keys=append(keys,k)
 	}	
 
-	// 查找下一个位置
+	// 查找下一个起始位置
 	for	has[start] != nil{
 		start++
 	}
@@ -130,13 +130,15 @@ func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
 		s= int (t.Min)
 	}
 
-	for i:=s;i<=int(t.Max);i++{
-		if has[i]==nil{
+	for i:=s;i <= int(t.Max);i++{
+		if has[i] == nil{
+			// 计算位置
 			next:=i-int(t.Min)
 			if seats[next] {
 				continue
 			}
 
+			// 检查位置是否可用
 			ok:=true
 			for _,item:=range keys{
 				if has[next + int(item)] != nil {
@@ -144,8 +146,11 @@ func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
 					break
 				}
 			}
+			// 可用
 			if ok {
-				t.SetSeats(next,seats,has)
+				t.Next = next
+				seats[next] = true
+				t.SetSeats(next,has)
 				break
 			}
 		}
@@ -157,9 +162,7 @@ func(t *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx)int{
 	return start
 }
 
-func (t *TrieNodeEx)SetSeats(next int,seats []bool,has []*TrieNodeEx){
-	t.Next = next
-	seats[next] = true
+func (t *TrieNodeEx)SetSeats(next int,has []*TrieNodeEx){
 	for key,value := range t.Merge_values{
 		position := next + int (key)
 		has[position] = value

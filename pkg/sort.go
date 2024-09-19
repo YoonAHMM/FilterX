@@ -18,7 +18,7 @@ func SortMap(mp map[int32]int) []int32 {
         return sortedPairs[i].Value < sortedPairs[j].Value
     })
 
-   
+
     var sortedKeys []int32
     for _, pair := range sortedPairs {
         sortedKeys = append(sortedKeys, pair.Key)

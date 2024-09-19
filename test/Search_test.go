@@ -2,23 +2,14 @@ package test
 
 import (
 	"reflect"
-	"strings"
+	"github.com/FilterX/pkg"
 	"testing"
 	"os"
 	"fmt"
 	"bufio"
 	"github.com/FilterX/logic"
 )
-func removeBOM(s string) string {
-	// 定义 BOM 的 Unicode 表示
-	bom := "\ufeff"
 
-	// 检查字符串是否以 BOM 开头，如果是，则移除它
-	if strings.HasPrefix(s, bom) {
-		return s[len(bom):]
-	}
-	return s
-}
 func init_SearchTest()*logic.Search{
 	file, err := os.Open("../testdata/BadWord.txt")
     if err != nil {
@@ -29,7 +20,7 @@ func init_SearchTest()*logic.Search{
     scanner := bufio.NewScanner(file)
 	list := make([]string, 0)
     for scanner.Scan() {
-		text:=removeBOM(scanner.Text())
+		text:=pkg.RemoveBOM(scanner.Text())
 		list = append(list, text)
     }
 
