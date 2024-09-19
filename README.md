@@ -1,9 +1,11 @@
-# FilterX
-敏感词过滤算法golang实现
+<p align="center">
+  <h1 align="center">FilterX</h1>
+</p>
+Sensitive Word Filtering Algorithm in GoLang Implementation
 
-- 项目以学习为目的，里面的代码可能存在问题，仅供参考。
-- 项目主要还是以原项目的代码为基础，进行了一些修改。
-- 未完成如果你有好的想法可以提issue或者pr。
+- The project is for learning purposes, and the code may contain issues. It is for reference only.
+- The project is mainly based on the original project's code with some modifications.
+- It's not fully completed yet. If you have good ideas, feel free to raise an issue or  PR.
 
-### 参考项目
+### Reference Project (star star)
 https://github.com/toolgood/ToolGood.Words
