@@ -108,30 +108,97 @@ func(s *SearchEx)GetStringFindFirst(text string) string{
 }
 
 func (s *SearchEx)GetStringFindAll(text string) []string  {
-	root:= make([]string, 0)
+	Allstr:= make([]string, 0)
 	p:=0
 	for _,c := range text {
 		t:=s.Dict[c]
 		if	t==0{
-			p = 0;
-			continue;
+			p = 0
+			continue
 		}
-		next := s.Next[p] + t;
-		find := s.Key[next] == t;
+		next := s.Next[p] + t
+		find := s.Key[next] == t
 		if  find == false && p != 0  {
 			p = 0;
-			next = s.Next[0] + t;
-			find = s.Key[next] == t;
+			next = s.Next[0] + t
+			find = s.Key[next] == t
 		}
 		if  find  {
-			index := s.Check[next];
+			index := s.Check[next]
 			if index > 0 {
 				for _,item:=range s.Guides[index]{
-					root=append(root,s.KeyWords[item])
+					Allstr=append(Allstr,s.KeyWords[item])
 				}
 			}
-			p = next;
+			p = next
 		}
 	}
-	return root;
+	return Allstr
 }
+
+
+func (s *SearchEx)ContainsAny(text string) bool  {
+	p:=0
+	for _,c := range text {
+		t:=s.Dict[c]
+		if	t==0{
+			p = 0
+			continue
+		}
+		next := s.Next[p] + t
+
+		if s.Key[next] == t {
+			if  s.Check[next] > 0  { 
+				return true
+			}
+			p = next
+		} else {
+			p = 0
+			next = s.Next[p] + t
+			if (s.Key[next] == t) {
+				if (s.Check[next] > 0) {
+					 return true
+				}
+				p = next
+			}
+		}
+	}
+	return false
+}
+ 
+
+func (s *SearchEx)Replace(text string, replaceChar rune) string  {
+	result:= []rune (text)
+	p:=0
+	var i int
+	for _,c := range text {
+		t:=s.Dict[c]
+		if	t==0{
+			p = 0
+			i++
+			continue
+		}
+		next := s.Next[p] + t
+		find := s.Key[next] == t
+		if  find == false && p != 0  {
+			p = 0
+			next = s.Next[0] + t
+			find = s.Key[next] == t
+		}
+		if  find  {
+			index := s.Check[next]
+			if (index > 0) {
+				r:=s.KeyWords[s.Guides[index][0]]
+				maxLength:=len([]rune(r))
+				start:= i + 1 - maxLength
+				for j := start; j <= i; j++{
+					result[j]=replaceChar
+				} 
+			}
+			p = next
+		}
+		i++
+	}
+	return string (result) 
+}
+

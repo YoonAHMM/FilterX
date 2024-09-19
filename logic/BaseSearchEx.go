@@ -208,7 +208,7 @@ func(b *BaseSearchEx)tryLinks(node *internal.TrieNodeEx) {
 func(b *BaseSearchEx)build(root *internal.TrieNodeEx,length int) {
 	has:= make([]*internal.TrieNodeEx,0x00FFFFFF)
 
-	length = root.Rank(has) + length + 1;
+	length = root.Rank(has) + length + 1
 	b.Key=make([]int,length)
 	b.Next=make([]int,length)
 	b.Check=make([]int,length)
@@ -230,5 +230,4 @@ func(b *BaseSearchEx)build(root *internal.TrieNodeEx,length int) {
 		}
 	}
 	b.Guides=guides
-	return
 }

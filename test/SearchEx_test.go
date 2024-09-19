@@ -90,3 +90,61 @@ func TestSearchEx_GetStringFindAll(t *testing.T) {
 		})
 	}
 }
+
+func TestSearchEx_ContainsAny(t *testing.T) {
+	search:=init_SearchExTest()
+
+	type args struct {
+		text string
+	}
+	tests := []struct {
+		name string
+		w    *logic.SearchEx
+		args args
+	}{
+		{
+			name: "1",
+			w:    search,
+			args: args{
+				text: "wwwwwwwwddddaadadadadadhmmloveljxfhhfhffhh1",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.w.ContainsAny(tt.args.text);!got {
+				t.Errorf("SearchEx.ContainsAny() = %v,want:true", got)
+			}
+		})
+	}
+}
+
+func TestSearchEx_Replace(t *testing.T) {
+	search:=init_SearchExTest()
+
+	type args struct {
+		text string
+	}
+	tests := []struct {
+		name string
+		w    *logic.SearchEx
+		args args
+		want string
+	}{
+		{
+			name: "1",
+			w:    search,
+			args: args{
+				text: "保密局11hmmloveljx11保密局",
+			},
+			want: "*****hmmloveljx*****",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.w.Replace(tt.args.text,'*');!reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SearchEx.Replace() = %v, want %v", got,tt.want)
+			}
+		})
+	}
+}
