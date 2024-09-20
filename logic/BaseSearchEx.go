@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"math"
 	"os"
 
 	"github.com/FilterX/internal"
@@ -32,6 +31,7 @@ func(b *BaseSearchEx)Save(filepath string) {
 	defer f.Close()
 
 	b.Save2(f)
+	return
 }
 
 func(b *BaseSearchEx)Save2(f *os.File) {
@@ -75,7 +75,7 @@ func(b *BaseSearchEx)Save2(f *os.File) {
 	for _,item:= range b.Dict{
 		f.Write(IntToBytes(item))
 	}
-
+	return
 }
 
 // 从二进制文件读取
@@ -188,7 +188,7 @@ func (b *BaseSearchEx)CreateDict(keywords []string) int {
 		list2 = append(list2,list[index[i]])
 	}
 
-	b.Dict = make([]int,math.MaxInt32)   
+	b.Dict = make([]int,0x10FFFF)   
 	
 	//以list2顺序添加到字典
 	for i,v:=range list2{
